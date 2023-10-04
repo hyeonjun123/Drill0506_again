@@ -47,14 +47,21 @@ def reset_world():
 def set_new_target_arrow():
     global sx, sy, hx, hy, t,action
     global frame
-    sx, sy = cx, cy  # p1: 시작점
-    # hx, hy =50,50
+    global target_exists
 
-    hx, hy = points[0]  # p2: 끝점
-    t = 0.0
-    action = 1 if sx < hx else 0
-    frame = 0
+    if points:
+        sx, sy = cx, cy  # p1: 시작점
+        # hx, hy =50,50
 
+        hx, hy = points[0]  # p2: 끝점
+        t = 0.0
+        action = 1 if sx < hx else 0
+        frame = 0
+        target_exists =True
+    else:
+        action = 3 if action == 1 else 2 #우측으로 이동중이었으면 오른쪽 idle한다.
+        frame =0
+        target_exists = False
 
 def render_world():
     clear_canvas()
@@ -75,14 +82,15 @@ def update_world():
 
     frame = (frame + 1) % 8
 
-
-    if t <= 1.0:
-        t += 0.001
-        cx = (1 - t) * sx + t * hx  # cx는 시작점과 마지막점을 1-t : t비율로 섞음
-        cy = (1 - t) * sy + t * hy
-    else:
-        cx,cy = hx,hy #캐릭터 위치를 목적지 위치와 정확히 일치시킴
-        set_new_target_arrow()
+    if target_exists:
+        if t <= 1.0:
+            t += 0.001
+            cx = (1 - t) * sx + t * hx  # cx는 시작점과 마지막점을 1-t : t비율로 섞음
+            cy = (1 - t) * sy + t * hy
+        else:
+            cx, cy = hx, hy  # 캐릭터 위치를 목적지 위치와 정확히 일치시킴
+            del points[0]  # 목표지점에 왔기 때문에 , 더이상 필요없는 점을 삭제
+            set_new_target_arrow()
 
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
