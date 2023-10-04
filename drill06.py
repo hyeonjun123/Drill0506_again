@@ -94,6 +94,9 @@ def update_world():
             del points[0]  # 목표지점에 왔기 때문에 , 더이상 필요없는 점을 삭제
             set_new_target_arrow()
 
+    elif points: #포인트의 점이 있는 한 계속해서 새로운 타겟을 설정하게된다. 맨처음의 한번만 접근하고 그렇게됐으면 좋겠다.
+        set_new_target_arrow()
+
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
 hide_cursor()
