@@ -30,44 +30,48 @@ def reset_world():
     global running, cx, cy, frame
     global hx, hy
     global sx, sy
-    global t,action
-
+    global t, action
 
     running = True
     cx, cy = TUK_WIDTH // 2, TUK_HEIGHT // 2
     frame = 0
     action = 3
 
+    set_new_target_arrow()
 
-    sx, sy = cx, cy # p1: 시작점
-    #hx, hy =50,50
-    hx, hy = random.randint(0,TUK_WIDTH), random.randint(0,TUK_HEIGHT) #p2: 끝점
+
+def set_new_target_arrow():
+    global sx, sy, hx, hy, t
+    sx, sy = cx, cy  # p1: 시작점
+    # hx, hy =50,50
+    hx, hy = random.randint(0, TUK_WIDTH), random.randint(0, TUK_HEIGHT)  # p2: 끝점
     t = 0.0
 
 
 def render_world():
     clear_canvas()
     TUK_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
-    arrow.draw(hx,hy)
+    arrow.draw(hx, hy)
     character.clip_draw(frame * 100, 100 * action, 100, 100, cx, cy)
     update_canvas()
 
 
 def update_world():
     global frame
-    global cx,cy
-    global t,action
+    global cx, cy
+    global t, action
 
     frame = (frame + 1) % 8
 
-    action = 1 if cx<hx else 0
+    action = 1 if cx < hx else 0
 
-    if t<= 1.0:
+    if t <= 1.0:
         t += 0.001
-        cx = (1-t)*sx + t*hx #cx는 시작점과 마지막점을 1-t : t비율로 섞음
-        cy = (1-t)*sy + t*hy
-
-
+        cx = (1 - t) * sx + t * hx  # cx는 시작점과 마지막점을 1-t : t비율로 섞음
+        cy = (1 - t) * sy + t * hy
+    else:
+        cx,cy = hx,hy #캐릭터 위치를 목적지 위치와 정확히 일치시킴
+        set_new_target_arrow()
 
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
